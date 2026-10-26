@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>To Do List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body class="min-w-80 bg-slate-50 font-sans text-slate-800 antialiased">
+    <main class="px-4 py-6 sm:py-10">
+      <div class="mx-auto max-w-3xl">
+        <header class="app-surface mb-4 p-5 sm:p-6">
+          <p class="mb-2 text-xs font-extrabold tracking-[0.12em] text-indigo-600">STUDY PLANNER</p>
+          <h1 class="mb-6 text-2xl font-bold">To Do List</h1>
+
+          <div class="mb-2 flex items-center justify-between">
+            <h2 class="text-sm font-semibold">오늘의 진행률</h2>
+            <span id="progress-value" class="font-bold tabular-nums text-indigo-600" aria-live="polite">0%</span>
+          </div>
+          <div
+            id="progress-bar"
+            class="h-3 overflow-hidden rounded-full bg-indigo-50"
+            role="progressbar"
+            aria-label="전체 할 일 완료 진행률"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+          >
+            <div class="progress-fill h-full rounded-full" style="width: 0%"></div>
+          </div>
+        </header>
+
+        <section class="app-surface mb-4 p-4 sm:p-5" aria-labelledby="add-heading">
+          <h2 id="add-heading" class="mb-3 text-lg font-bold">새 할 일</h2>
+          <form id="todo-form" novalidate>
+            <div class="grid grid-cols-1 items-end gap-2 sm:grid-cols-2 md:grid-cols-6">
+              <div class="md:col-span-2">
+                <label for="todo-input" class="mb-1 block text-sm font-medium">할 일</label>
+                <input
+                  id="todo-input"
+                  class="form-field w-full rounded-lg border border-slate-300 bg-white px-3"
+                  type="text"
+                  placeholder="할 일을 입력하세요"
+                  autocomplete="off"
+                  aria-describedby="input-error"
+                >
+                <span id="input-error" class="sr-only">할 일 내용을 입력해 주세요.</span>
+              </div>
+              <div>
+                <label for="todo-category" class="mb-1 block text-sm font-medium">카테고리</label>
+                <input
+                  id="todo-category"
+                  class="form-field w-full rounded-lg border border-slate-300 bg-white px-3"
+                  type="text"
+                  value="기타"
+                  placeholder="카테고리"
+                  autocomplete="off"
+                >
+              </div>
+              <div>
+                <label for="todo-deadline" class="mb-1 block text-sm font-medium">마감일</label>
+                <input
+                  id="todo-deadline"
+                  class="form-field w-full rounded-lg border border-slate-300 bg-white px-3"
+                  type="date"
+                >
+              </div>
+              <div>
+                <label for="todo-priority" class="mb-1 block text-sm font-medium">우선순위</label>
+                <select id="todo-priority" class="form-field w-full rounded-lg border border-slate-300 bg-white px-2">
+                  <option value="high">높음</option>
+                  <option value="medium" selected>보통</option>
+                  <option value="low">낮음</option>
+                </select>
+              </div>
+              <button
+                class="min-h-11 rounded-lg bg-indigo-600 px-4 font-semibold text-white transition hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-span-2 md:col-span-1"
+                type="submit"
+              >추가</button>
+            </div>
+          </form>
+        </section>
+
+        <div id="storage-notice" class="mb-4 hidden rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900" role="alert"></div>
+
+        <section aria-label="할 일 목록">
+          <nav class="mb-3" aria-label="할 일 필터">
+            <div class="grid grid-cols-3 gap-2" role="group" aria-label="목록 필터">
+              <button class="filter-button active" type="button" data-filter="all" aria-pressed="true">전체</button>
+              <button class="filter-button" type="button" data-filter="today" aria-pressed="false">오늘</button>
+              <button class="filter-button" type="button" data-filter="completed" aria-pressed="false">완료됨</button>
+            </div>
+          </nav>
+
+          <ul id="todo-list" class="grid list-none gap-3 p-0" aria-live="polite"></ul>
+
+          <div id="empty-state" class="app-surface p-10 text-center text-slate-500" hidden>
+            <svg
+              class="mx-auto mb-3 text-indigo-400"
+              xmlns="http://www.w3.org/2000/svg"
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect x="9" y="7" width="30" height="35" rx="6" fill="currentColor" opacity=".12"/>
+              <path d="M17 18h14M17 25h14M17 32h8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="m29 34 3 3 6-7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <p class="m-0">등록된 할 일이 없습니다. 오늘 공부할 내용을 추가해보세요!</p>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
