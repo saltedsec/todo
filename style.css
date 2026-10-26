@@ -19,6 +19,42 @@ body {
   box-shadow: 0 0 0 0.2rem rgb(220 53 69 / 15%);
 }
 
+.progress-fill {
+  transition: width 250ms ease, background-color 250ms ease;
+}
+
+.progress-fill[data-progress-state="empty"] {
+  background-color: #cbd5e1;
+}
+
+.progress-fill[data-progress-state="low"] {
+  background-color: #ef4444;
+}
+
+.progress-fill[data-progress-state="medium"] {
+  background-color: #f59e0b;
+}
+
+.progress-fill[data-progress-state="high"] {
+  background-color: #22c55e;
+}
+
+#progress-value[data-progress-state="empty"] {
+  color: #64748b;
+}
+
+#progress-value[data-progress-state="low"] {
+  color: #dc2626;
+}
+
+#progress-value[data-progress-state="medium"] {
+  color: #d97706;
+}
+
+#progress-value[data-progress-state="high"] {
+  color: #16a34a;
+}
+
 .filter-button {
   min-height: 44px;
   border: 1px solid #e1e6f0;
@@ -80,7 +116,8 @@ body {
 }
 
 .deadline-badge,
-.priority-badge {
+.priority-badge,
+.deadline-urgency {
   display: inline-flex;
   min-height: 28px;
   align-items: center;
@@ -103,9 +140,41 @@ body {
   color: #3d7548;
 }
 
+.deadline-urgency[data-deadline-state="soon"] {
+  background: #fff7db;
+  color: #946200;
+}
+
+.deadline-urgency[data-deadline-state="today"],
+.deadline-urgency[data-deadline-state="overdue"] {
+  background: #fff0ef;
+  color: #b83b35;
+}
+
+.todo-card.is-completed {
+  border-color: #e2e8f0;
+  background: #f8fafc;
+  box-shadow: none;
+}
+
+.todo-card.is-completed .todo-checkbox {
+  accent-color: #64748b;
+}
+
 .todo-card.is-completed .todo-text {
-  color: #9aa2b1;
+  color: #64748b;
   text-decoration: line-through;
+}
+
+.todo-card.is-completed .category-badge,
+.todo-card.is-completed .deadline-badge,
+.todo-card.is-completed .priority-badge {
+  background: #e9edf2;
+  color: #64748b;
+}
+
+.todo-card.is-completed .delete-button {
+  color: #a0a8b5;
 }
 
 .delete-button {

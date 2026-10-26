@@ -31,6 +31,24 @@ function getLocalDate() {
   return `${year}-${month}-${day}`;
 }
 
+function getUtcDay(dateString) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateString);
+  if (!match) return null;
+
+  const [, year, month, day] = match;
+  const timestamp = Date.UTC(Number(year), Number(month) - 1, Number(day));
+  const date = new Date(timestamp);
+  if (
+    date.getUTCFullYear() !== Number(year)
+    || date.getUTCMonth() !== Number(month) - 1
+    || date.getUTCDate() !== Number(day)
+  ) {
+    return null;
+  }
+
+  return timestamp / 86_400_000;
+}
+
 function showStorageNotice(message) {
   storageNotice.textContent = message;
   storageNotice.classList.toggle("hidden", message.length === 0);
@@ -152,6 +170,29 @@ function createTodoCard(todo) {
     deadline.dateTime = todo.deadline;
     deadline.textContent = `마감 ${todo.deadline}`;
     details.append(deadline);
+
+    if (!todo.completed) {
+      const deadlineDay = getUtcDay(todo.deadline);
+      const today = getUtcDay(getLocalDate());
+      if (deadlineDay !== null && today !== null) {
+        const daysRemaining = deadlineDay - today;
+        if (daysRemaining <= 3) {
+          const urgency = document.createElement("span");
+          urgency.className = "deadline-urgency";
+          if (daysRemaining < 0) {
+            urgency.dataset.deadlineState = "overdue";
+            urgency.textContent = `기한 초과 ${Math.abs(daysRemaining)}일`;
+          } else if (daysRemaining === 0) {
+            urgency.dataset.deadlineState = "today";
+            urgency.textContent = "오늘 마감";
+          } else {
+            urgency.dataset.deadlineState = "soon";
+            urgency.textContent = `마감 임박 D-${daysRemaining}`;
+          }
+          details.append(urgency);
+        }
+      }
+    }
   }
 
   const priority = document.createElement("span");
@@ -166,6 +207,8 @@ function createTodoCard(todo) {
   deleteButton.textContent = "삭제";
   deleteButton.setAttribute("aria-label", `삭제: ${todo.text}`);
   deleteButton.addEventListener("click", () => {
+    if (!window.confirm(`"${todo.text}" 항목을 삭제하시겠습니까?`)) return;
+
     todos = todos.filter((itemTodo) => itemTodo.id !== todo.id);
     saveTodos();
     render();
@@ -183,6 +226,15 @@ function renderProgress() {
     : Math.round((completedCount / todos.length) * 100);
 
   progressFill.style.width = `${percentage}%`;
+  const progressState = todos.length === 0
+    ? "empty"
+    : percentage < 40
+      ? "low"
+      : percentage < 80
+        ? "medium"
+        : "high";
+  progressFill.dataset.progressState = progressState;
+  progressValue.dataset.progressState = progressState;
   progressBar.setAttribute("aria-valuenow", String(percentage));
   progressValue.textContent = `${percentage}%`;
 }
